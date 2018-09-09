@@ -134,8 +134,8 @@
         if (this.seller.pics) {
           let picWidth = 120;
           let margin = 6;
-          let width = (picWidth + margin) * this.seller.pics.length - margin;
-          this.$refs.picList.style.width = width + 'px';
+          let width = (picWidth + margin) * this.seller.pics.length - margin; // 这是图片列表的总长度
+          this.$refs.picList.style.width = width + 'px'; // 设置图片列表的宽度等于列表的总长度
           this.$nextTick(() => {
             if (!this.picScroll) {
               this.picScroll = new BScroll(this.$refs.picWrapper, {

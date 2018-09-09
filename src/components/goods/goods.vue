@@ -61,23 +61,25 @@
     data() {
       return {
         goods: [],
-        listHeight: [],
-        scrollY: 0,
-        selectedFood: {}
-      };
+        listHeight: [], // 用来储存foods区域的各个区块的高度(clientHeight)
+        scrollY: 0, // 用来存储foods区域的滚动的Y坐标
+        selectedFood: {} // 用来存储当前已被选择的food数据,对象保存形式
+      }; 
     },
     computed: {
-      currentIndex() {
+      currentIndex() { // 计算到达哪个区域的区间的时候的对应的索引值
         for (let i = 0; i < this.listHeight.length; i++) {
-          let height1 = this.listHeight[i];
-          let height2 = this.listHeight[i + 1];
+          let height1 = this.listHeight[i]; // 当前menu子块的高度
+          let height2 = this.listHeight[i + 1]; // 下一个menu子块的高度
+          // 滚动到底部的时候,height2为undefined,需要考虑这种情况
+          // 需要确定是在两个menu子块的高度区间
           if (!height2 || (this.scrollY >= height1 && this.scrollY < height2)) {
-            return i;
+            return i; // 返回这个menu子块的索引
           }
         }
         return 0;
       },
-      selectFoods() {
+      selectFoods() { // 自动将所有的goods.food添加一个count属性,方便做数量运算
         let foods = [];
         this.goods.forEach((good) => {
           good.foods.forEach((food) => {
@@ -96,8 +98,8 @@
         if (response.errno === ERR_OK) {
           this.goods = response.data;
           this.$nextTick(() => {
-            this._initScroll(); 
-            this._calculateHeight();
+            this._initScroll(); // 绑定滚动dom
+            this._calculateHeight(); // 计算foods区域的各个区域的高度
           });          
           }
       }
@@ -107,33 +109,35 @@
       selectMenu(index, event) {
         // 自己默认派发事件时候(BScroll),_constructed被置为true,但是浏览器原生并没有这个属性
         // 如果不存在这个属性,则为原生点击事件，不执行下面的函数
-         if (!event._constructed) {
+         if (!event._constructed) { // 忽略掉BScroll的事件
           return;
         } 
         let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
         let el = foodList[index];
-        this.foodsScroll.scrollToElement(el, 300);
+        this.foodsScroll.scrollToElement(el, 300); // 类似jump to的功能,通过这个方法,跳转到指定的dom
       },
       _initScroll() {
         this.menuScroll = new BScroll(this.$refs.menuWrapper, {
-          click: true
+          click: true // 结合BScroll的接口使用,是否将click事件传递,默认被拦截了
         });
         this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
           click: true,
           // 探针作用，实时监测滚动位置
           probeType: 3
         });
+        // 结合BScroll的接口使用,监听scroll事件(实时派发的),并获取鼠标坐标
         this.foodsScroll.on('scroll', (pos) => {
-          this.scrollY = Math.abs(Math.round(pos.y));
+          this.scrollY = Math.abs(Math.round(pos.y)); // 滚动坐标会出现负的,并且是小数,所以需要处理一下
         });      
       },
+      // 计算foods内部块的高度
       _calculateHeight() {
-        let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
+        let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook'); // 获取每一个food的dom对象
         let height = 0;
-        this.listHeight.push(height);
+        this.listHeight.push(height); // 初始化第一个高度为0
         for (let i = 0; i < foodList.length; i++) {
-          let item = foodList[i];
-          height += item.clientHeight;
+          let item = foodList[i]; // 每一个item都是刚才获取的food的每一个dom
+          height += item.clientHeight; // 主要是为了获取每一个foods内部块的高度
           this.listHeight.push(height);
         }
       },
@@ -143,7 +147,7 @@
       _drop(target) {
         // 体验优化,异步执行下落动画
         this.$nextTick(() => {
-          this.$refs.shopcart.drop(target);
+          this.$refs.shopcart.drop(target); // 调用shopcart的下落动画
         });
       },
       selectFood(food, event) {

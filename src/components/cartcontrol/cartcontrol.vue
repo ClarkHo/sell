@@ -1,7 +1,9 @@
 <template>
   <div class="cartcontrol">
+    <!-- 外层动画 -->
     <transition name="move">
       <div class="cart-decrease" v-show="food.count>0" @click.stop.prevent="decreaseCart">
+        <!-- 内层动画 -->
         <span class="inner icon-remove_circle_outline"></span>
       </div>
     </transition>
@@ -25,7 +27,7 @@
           return;
         }
         if (!this.food.count) {
-          Vue.set(this.food, 'count', 1);
+          Vue.set(this.food, 'count', 1); // 遇到没有这个属性的,会强行添加一个
         } else {
           this.food.count++;
         }
@@ -46,12 +48,12 @@
 <style lang="stylus" rel="stylesheet/stylus">
   .cartcontrol
     font-size: 0
-    .cart-decrease
+    .cart-decrease // 外层动画原始状态
       display: inline-block
       padding: 6px
       opacity: 1
       transform: translate3d(0, 0, 0)
-      .inner
+      .inner // 内层动画原始状态
         display: inline-block
         line-height: 24px
         font-size: 24px

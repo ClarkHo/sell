@@ -42,6 +42,7 @@
                 <span class="name">{{rating.username}}</span>
                 <img class="avatar" width="12" height="12" :src="rating.avatar">
               </div>
+              <!--使用vue过滤器filters来处理时间-->
               <div class="time">{{rating.rateTime | formatDate}}</div>
               <p class="text">
                 <span :class="{'icon-thumb_up':rating.rateType===0, 'icon-thumb_down':rating.rateType===1}"></span>{{rating.text}}
@@ -126,13 +127,13 @@
         });
       },
       needShow(type, text) {
-        if (this.onlyContent && !text) {
+        if (this.onlyContent && !text) { // 只显示有内容的 并且 没有内容就返回fals
           return false;
         }
-        if (this.selectType === ALL) {
+        if (this.selectType === ALL) { // 显示全部类型的rate
           return true;
         } else {
-          return type === this.selectType;
+          return type === this.selectType; // 只显示对应的类型的rate
         }
       }
     },
@@ -156,18 +157,18 @@
   @import "../../common/stylus/mixin.styl"
 
   .food
-    position: fixed
+    position: fixed // 霸占屏幕,全屏显示,所以用fixed布局
     left: 0
     top: 0
-    bottom: 48px
-    z-index: 30
+    bottom: 48px // 保留底部购物车底部栏的位置
+    z-index: 30 // z-index的数值是有考究的,要控制好各个页面的z-index纵深
     width: 100%
     background: #fff
     transform: translate3d(0, 0, 0)
     &.move-enter-active, &.move-leave-active
       transition: all 0.2s linear
     &.move-enter, &.move-leave-active
-      transform: translate3d(100%, 0, 0)  
+      transform: translate3d(100%, 0, 0) // 动画是3d变形,从右往左(改变的是x坐标),直线移动(linear) 
     .image-header
       position: relative
       width: 100%

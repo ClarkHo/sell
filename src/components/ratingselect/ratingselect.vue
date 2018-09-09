@@ -1,10 +1,12 @@
 <template>
   <div class="ratingselect">
     <div class="rating-type" border-1px>
+     <!--绑定一个select方法控制切换,绑定class控制切换之后的按钮样式显示-->  
       <span @click="select(2, $event)" class="block positive" :class="{'active':selectType===2}">{{desc.all}}<span class="count">{{ratings.length}}</span></span>
       <span @click="select(0, $event)" class="block positive" :class="{'active':selectType===0}">{{desc.positive}}<span class="count">{{positives.length}}</span></span>  
       <span @click="select(1, $event)" class="block negative" :class="{'active':selectType===1}">{{desc.negative}}<span class="count">{{negatives.length}}</span></span>
     </div>
+    <!--绑定一个toggleContent方法来控制有内容和无内容的显示-->
     <div @click="toggleContent" class="switch" :class="{'on': onlyContent}">
       <span class="icon-check_circle"></span>
       <span class="text">只看有内容的评价</span>
@@ -13,7 +15,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  const POSITIVE = 0;
+  const POSITIVE = 0; // 设置显示常量
   const NEGATIVE = 1;
   const ALL = 2; 
 
@@ -45,8 +47,8 @@
       }
     },
     computed: {
-      positives() {
-        return this.ratings.filter((rating) => {
+      positives() { // 自动过滤rateType(正向的rate)
+        return this.ratings.filter((rating) => { // js的filter函数会返回一个处理后的(为true)结果的结果数组
           return rating.rateType === POSITIVE;
         });
       },

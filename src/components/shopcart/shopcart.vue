@@ -1,6 +1,8 @@
 <template>
+  <!--vue的render渲染需要有一个root的根dom层,所以创建一个单独的div来包裹-->
   <div>
   <div class="shopcart">
+     <!--用toggleList点击显示隐藏购物车列表-->
     <div class="content" @click="toggleList">
       <div class="content-left">
         <div class="logo-wrapper">
@@ -148,12 +150,12 @@
         if (show) {
           this.$nextTick(() => {
             if (!this.scroll) {
-              console.log('click');
+             // console.log('click');
               this.scroll = new BScroll(this.$refs.listContent, {
                 click: true
               });
             } else {
-              console.log('click1');
+             // console.log('click1');
               this.scroll.refresh();
             }
           });
@@ -168,7 +170,7 @@
           let ball = this.balls[i];
           if (!ball.show) {
             ball.show = true;
-            ball.el = el;
+            ball.el = el; // 设置小球的el属性为一个dom对象
             this.dropBalls.push(ball); // 将下落的小球放进来
             return;
           }
@@ -177,7 +179,7 @@
       addFood(target) {
         this.drop(target);
       },
-      beforeDrop(el) {
+      beforeDrop(el) { // 这个方法的执行是因为这是一个vue的监听事件
         let count = this.balls.length;
         while (count--) {
           let ball = this.balls[count];
@@ -187,7 +189,7 @@
             let x = rect.left - 32;
             let y = -(window.innerHeight - rect.top - 22);
             // 外层做一个纵向的变化 
-            el.style.display = '';
+            el.style.display = ''; // 清空display
             el.style.webkitTransform = `translate3d(0,${y}px,0)`;
             el.style.transform = `translate3d(0,${y}px,0)`;
             // 内层做一个横向的变化
@@ -199,9 +201,9 @@
       },
       dropping(el, done) {
         /* eslint-disable no-unused-vars */
-        let rf = el.offsetHeight;
+        let rf = el.offsetHeight; // 触发重绘html
         // 当下降的时候，重写外部和内部的translate3d() 
-        this.$nextTick(() => {
+        this.$nextTick(() => { // 让动画效果异步执行,提高性能
           el.style.webkitTransform = 'translate3d(0, 0, 0)';
           el.style.transform = 'translate3d(0, 0, 0)';
           let inner = el.getElementsByClassName('inner-hook')[0];
@@ -339,7 +341,7 @@
             color: #fff               
     .ball-container
       .ball 
-        position: fixed
+        position: fixed // 小球动画必须脱离html布局流
         left: 32px
         bottom: 22px  
         z-index: 200
@@ -356,7 +358,7 @@
       top: 0
       z-index: -1
       width: 100%
-      transform: translate3d(0, -100%, 0)
+      transform: translate3d(0, -100%, 0) // -100%，是为了让子元素以自身内容，往上撑开自己的文本内容。 
       &.fold-enter-active, &.fold-leave-active
         transition: all 0.5s
       &.fold-enter, &.fold-leave-active
